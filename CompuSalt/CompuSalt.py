@@ -4,6 +4,14 @@ from Salty_collector import salty_collector
 from chat_parser import strip, win_open, fighters, winner, tier_strip
 from stat_tracker import get_stats, winner_loser
 import json
+import os.path
+
+#creates salty_stats.json if it doesn't already exist
+stats_template = {'A': {}, 'B': {}, 'C': {}, 'P': {},
+                'S': {}, 'X': {}}
+if not os.path.exists('salty_stats.json'):
+    with open('salty_stats.json', 'w') as salty:
+        json.dump(stats_template, salty, indent = 4)
 
 bot_owner = raw_input("Owner of this Bot: ")
 nick = raw_input("Bot Username: ")
