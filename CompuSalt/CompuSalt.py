@@ -1,6 +1,5 @@
 import socket
 import re
-from Salty_collector import salty_collector
 from chat_parser import strip, win_open, fighters, winner, tier_strip
 from stat_tracker import get_stats, winner_loser
 import json
@@ -18,15 +17,17 @@ nick = raw_input("Bot Username: ")
 channel = "#saltybet"
 server = "irc.twitch.tv"
 password = raw_input('Bot Password: ')
+irc_line_end = '\r\n'
+is_a_new_fight = False
 irc = socket.socket()
 irc.connect((server, 6667))
-is_a_new_fight = False
 
 
-irc.send("PASS " + password + "\r\n")
-irc.send("USER " + nick + " 0 * :" + bot_owner + "\r\n")
-irc.send("NICK " + nick + "\r\n")
-irc.send("JOIN " + channel + "\r\n")
+
+irc.send("PASS %s  %s" % (password, irc_line_end))
+irc.send("USER %s %s %s %s" % (nick, " 0 * :", bot_owner, irc_line_end))
+irc.send("NICK %s %s" % (nick, irc_line_end))
+irc.send("JOIN %s %s" % (channel, irc_line_end))
 
 while True:
     try:
