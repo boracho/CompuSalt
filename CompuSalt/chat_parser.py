@@ -1,5 +1,8 @@
 import re
 
+waifu_prefix = ':waifu4u!waifu4u@waifu4u.tmi.twitch.tv PRIVMSG #saltybet :'
+waifu_open = 'Bets are OPEN for '
+waifu_winner = 'wins!'
 regex = re.compile(':waifu4u!waifu4u@waifu4u.tmi.twitch.tv PRIVMSG #saltybet :')
 open = re.compile('Bets are OPEN for ')
 win = re.compile('wins!')
@@ -7,10 +10,12 @@ win = re.compile('wins!')
 #stripping the cruft from our chat string 
 def strip(chat):
     '''strips out the IRC info from the message'''
-    match = re.search(regex.pattern, chat)
-    if match:
-        msg = chat[match.end():]
-        return msg
+    #match = re.search(regex.pattern, chat)
+    if waifu_prefix in chat:
+        #msg = chat[match.end():]
+        return chat[len(waifu_prefix):]
+
+
 #if our chat string/message is announcing a match or declaring a winner, strip the cruft and return only the important bits        
 def win_open(message):
     '''this will decide whether the message is announcing a winner or the start of
@@ -20,11 +25,12 @@ def win_open(message):
     winner = re.search(win.pattern, message)
     tier = re.search('Tier', message)
     
-    if openner:
+    if waifu_open in message:
             geg = openner.end()
             return message[geg:tier.end()+1]
-    if winner:
+    if waifu_winner in message:
             return message[:winner.end()]
+
 
 #returns a list with our two fighters
 def fighters(message):
@@ -37,10 +43,14 @@ def fighters(message):
     
     return [fight_1, fight_2]
 
+
+
 #returns the winner of the fight
 def winner(message):
     '''getting the winner from a match end announcement'''
     return message[:message.find('wins')-1]
+
+
 
 #returns the tier of the current match
 def tier_strip(message):
